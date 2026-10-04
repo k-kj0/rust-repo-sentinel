@@ -87,12 +87,9 @@ pub fn scan_repository(
     {
         let entry = match entry {
             Ok(entry) => entry,
-            Err(error) => {
-                eprintln!("Warning: {error}");
-                continue;
-            }
-        };
-
+           Err(error) => {
+    eprintln!("Warning: could not scan {}: {error}", path.display());
+}
         if !entry.file_type().is_file() {
             continue;
         }
