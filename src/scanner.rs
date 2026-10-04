@@ -62,10 +62,7 @@ fn scan_file(path: &Path, root: &Path, rules: &[FindingRule]) -> io::Result<Vec<
     Ok(findings)
 }
 
-pub fn scan_repository(
-    root: &Path,
-    rules: &[FindingRule],
-) -> io::Result<(usize, Vec<Finding>)> {
+pub fn scan_repository(root: &Path, rules: &[FindingRule]) -> io::Result<(usize, Vec<Finding>)> {
     let mut files_scanned = 0;
     let mut findings = Vec::new();
 
