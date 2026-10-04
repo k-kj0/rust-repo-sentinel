@@ -24,11 +24,7 @@ fn looks_like_text(bytes: &[u8]) -> bool {
     !bytes.contains(&0)
 }
 
-fn scan_file(
-    path: &Path,
-    root: &Path,
-    rules: &[FindingRule],
-) -> io::Result<Vec<Finding>> {
+fn scan_file(path: &Path, root: &Path, rules: &[FindingRule]) -> io::Result<Vec<Finding>> {
     let bytes = fs::read(path)?;
 
     if !looks_like_text(&bytes) {
