@@ -98,3 +98,39 @@ pub fn scan_repository(root: &Path, rules: &[FindingRule]) -> io::Result<(usize,
 
     Ok((files_scanned, findings))
 }
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::rules::default_rules;
+    use std::fs;
+
+    #[test]
+    fn detects_fake_secret() {
+        let temp_dir = std::env::temp_dir().join("rust-repo-sentinel-test");
+
+        fs::create_dir_all(&temp_dir).expect("failed to create test directory");
+
+        let test_file = temp_dir.join("config.txt");
+
+        fs::write(
+            &test_file,
+            r#"api_key = "FAKE_TEST_KEY_123456789""#,
+        )
+        .expect("failed to write test file");
+
+        let rules = default_rules();
+
+        let (_, findings) =
+            scan_repository(&temp_dir, &rules).expect("scan failed");
+
+        assert!(
+            findings
+                .iter()
+                .any(|finding| finding.rule == "Potential secret assignment"),
+            "expected fake secret to be detected"
+        );
+
+        let _ = fs::remove_file(&test_file);
+        let _ = fs::remove_dir(&temp_dir);
+    }
+}
