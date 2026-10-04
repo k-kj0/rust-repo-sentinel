@@ -1,8 +1,4 @@
-use std::{
-    env,
-    path::PathBuf,
-    process,
-};
+use std::{env, path::PathBuf, process};
 
 use serde_json::to_string_pretty;
 
@@ -37,17 +33,14 @@ fn main() {
             "--json" => {
                 json_output = true;
             }
-
             "--help" | "-h" => {
                 print_usage();
                 return;
             }
-
             value if value.starts_with('-') => {
                 eprintln!("Unknown option: {value}");
                 process::exit(2);
             }
-
             value => {
                 root = PathBuf::from(value);
             }
@@ -55,34 +48,24 @@ fn main() {
     }
 
     if !root.exists() {
-        eprintln!(
-            "Error: path does not exist: {}",
-            root.display()
-        );
-
+        eprintln!("Error: path does not exist: {}", root.display());
         process::exit(2);
     }
 
     if !root.is_dir() {
-        eprintln!(
-            "Error: expected a directory: {}",
-            root.display()
-        );
-
+        eprintln!("Error: expected a directory: {}", root.display());
         process::exit(2);
     }
 
     let rules = default_rules();
 
-    let (files_scanned, findings) =
-        match scan_repository(&root, &rules) {
-            Ok(result) => result,
-
-            Err(error) => {
-                eprintln!("Scan failed: {error}");
-                process::exit(1);
-            }
-        };
+    let (files_scanned, findings) = match scan_repository(&root, &rules) {
+        Ok(result) => result,
+        Err(error) => {
+            eprintln!("Scan failed: {error}");
+            process::exit(1);
+        }
+    };
 
     let report = ScanReport {
         files_scanned,
@@ -90,12 +73,7 @@ fn main() {
     };
 
     if json_output {
-        println!(
-            "{}",
-            to_string_pretty(&report)
-                .expect("report should serialize")
-        );
-
+        println!("{}", to_string_pretty(&report).expect("report should serialize"));
         return;
     }
 
@@ -111,13 +89,7 @@ fn main() {
     }
 
     for finding in &report.findings {
-        println!(
-            "[{}] {}:{}",
-            finding.risk,
-            finding.file,
-            finding.line
-        );
-
+        println!("[{}] {}:{}", finding.risk, finding.file, finding.line);
         println!("Rule: {}", finding.rule);
         println!("Preview: {}", finding.preview);
         println!("Action: {}", finding.recommendation);
