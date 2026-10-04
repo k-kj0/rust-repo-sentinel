@@ -1,13 +1,12 @@
 use std::{
-    fs,
-    io,
+    fs, io,
     path::{Path, PathBuf},
 };
 
 use walkdir::{DirEntry, WalkDir};
 
 use crate::{
-    report::{redact_line, risk_as_string, Finding},
+    report::{Finding, redact_line, risk_as_string},
     rules::FindingRule,
 };
 
