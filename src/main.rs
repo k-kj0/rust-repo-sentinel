@@ -73,7 +73,10 @@ fn main() {
     };
 
     if json_output {
-        println!("{}", to_string_pretty(&report).expect("report should serialize"));
+        println!(
+            "{}",
+            to_string_pretty(&report).expect("report should serialize")
+        );
         return;
     }
 
