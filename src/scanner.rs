@@ -17,13 +17,7 @@ fn should_skip(entry: &DirEntry) -> bool {
     entry.file_type().is_dir()
         && matches!(
             name.as_ref(),
-            ".git"
-                | "target"
-                | "node_modules"
-                | ".next"
-                | "dist"
-                | "build"
-                | "vendor"
+            ".git" | "target" | "node_modules" | ".next" | "dist" | "build" | "vendor"
         )
 }
 
@@ -87,9 +81,12 @@ pub fn scan_repository(
     {
         let entry = match entry {
             Ok(entry) => entry,
-           Err(error) => {
-    eprintln!("Warning: could not scan {}: {error}", path.display());
-}
+            Err(error) => {
+                eprintln!("Warning: {error}");
+                continue;
+            }
+        };
+
         if !entry.file_type().is_file() {
             continue;
         }
@@ -101,12 +98,8 @@ pub fn scan_repository(
                 files_scanned += 1;
                 findings.append(&mut file_findings);
             }
-
             Err(error) => {
-                eprintln!(
-                    "Warning: could not scan {}: {error}",
-                    path.display()
-                );
+                eprintln!("Warning: could not scan {}: {error}", path.display());
             }
         }
     }
