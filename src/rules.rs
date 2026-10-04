@@ -23,8 +23,7 @@ pub fn default_rules() -> Vec<FindingRule> {
             )
             .expect("secret rule must compile"),
             risk: RiskLevel::High,
-            recommendation:
-                "Move credentials to a secure secret store or environment variable.",
+            recommendation: "Move credentials to a secure secret store or environment variable.",
         },
         FindingRule {
             name: "Private key material",
